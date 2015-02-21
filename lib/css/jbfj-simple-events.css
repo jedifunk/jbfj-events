@@ -1,8 +1,20 @@
-/* JBFJ Simple Events CSS */
+/* jbfj Simple Events CSS */
 
 .jbfj-events {
-	border-bottom: 1px solid;
+	border-top: 1px solid;
 }
 .jbfj-events:first-child {
 	border-top: none;
+}
+
+/* Widget */
+.widget-jbfj-events li {
+	margin-bottom: 10px;
+}
+.widget-jbfj-events .event-title {
+	font-weight: 700;
+	font-size: 1.1em;
+}
+.widget-jbfj-events .event-time {
+	padding-left: 5px;
 }
