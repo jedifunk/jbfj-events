@@ -1,26 +1,58 @@
 <?php 
+// Create Admin Menu
+if (is_admin() ){
+	add_action('admin_menu', 'jbfj_events_create_menu' );
+	add_action( 'admin_init', 'jbfj_events_register_settings' );
+}
 
-add_action('admin_init', 'jbfj_events_admin_init');
+// Create Events Settings Page
+function jbfj_events_create_menu() {
+    add_submenu_page('edit.php?post_type=event', 'Events Settings', 'Events Settings', 'administrator', 'events-settings.php', 'jbfj_events_settings_page');
+}
 
-function jbfj_events_admin_init() {
+// Create the Events Settings page
+function jbfj_events_settings_page() {
+?>
+<div class="wrap">
+	<h2>jbfj Events Page Settings</h2>
+	<?php settings_errors(); ?>	
+	<form method="post" action="options.php">
+		<?php
+			do_settings_sections('events-settings.php');
+			settings_fields('jbfj_event_options'); 		
+			submit_button(); 
+		?>
+	</form>
+</div>
+<?php }
 
-	if( false == get_option( 'jbfj_event_options' ) ) {	
-		add_option( 'jbfj_event_options' );
-	}
-	// Main Event settings
-	add_settings_section('jbfj_event_main', 'Events Page Settings', 'events_page_section_callback', 'jbfj_events_admin');
+// Create Settings Section and Settings
+function jbfj_events_register_settings() {
+	
+	// Create Section
+	add_settings_section('jbfj_event_main', 'Events Page Settings', false, 'events-settings.php');
+	
+	// Add Settings
 	add_settings_field(
-		'events_page',
+		'jbfj_events_page',
 		'Page:',
 		'page_callback',
-		'jbfj_events_admin',
+		'events-settings.php',
+		'jbfj_event_main'
+	);	
+	add_settings_field(
+		'jbfj_event_message',
+		'Message: ',
+		'message_callback',
+		'events-settings.php',
 		'jbfj_event_main'
 	);
 	
-	register_setting('jbfj_event_options', 'jbfj_event_page', 'jbfj_events_validate');
+	register_setting( 'jbfj_event_options', 'jbfj_event_page', 'jbfj_events_validate' );
+	register_setting( 'jbfj_event_options', 'jbfj_event_message' );
 }
 
-function events_page_section_callback() {
+function page_callback() {
 	global $wpdb;
 	$eventPage = get_option( 'jbfj_event_page' );
 	$pageID = $eventPage["page_to_use"];
@@ -31,10 +63,7 @@ function events_page_section_callback() {
 	} else {
 		echo '<p>The events are set to display on the <strong>' . $page->post_title .'</strong> page currently.</p>';	
 	}
-}
-
-function page_callback() {
-	$options = get_option('jbfj_event_options');
+	
 	$dd_options = array(
 		'name' => 'jbfj_event_page[page_to_use]',
 		'show_option_none' => __( 'Choose Page' ),
@@ -43,33 +72,11 @@ function page_callback() {
 	);
 	wp_dropdown_pages($dd_options);
 }
-// Create the Events Settings page
-function jbfj_events_settings_page() {
-	
-	// check for sufficient admin permissions
-	if ( !current_user_can('manage_options') ) {
-		wp_die(__('You do not have sufficient permissions to access this page') );
-	}
-	
-	//variables for the fields & options
-	
-?>
 
-<div class="wrap">
-	<?php screen_icon('options-general'); ?><h2>jbfj Events Page Settings</h2>
-	<?php settings_errors(); ?>
-	
-	<form method="post" action="options.php">
-		<?php 
-			settings_fields('jbfj_event_options');
-			do_settings_sections('jbfj_events_admin'); 
-		
-			submit_button(); 
-		?>
-	</form>
-</div>
-
-<?php }
+function message_callback(){
+	$message = esc_attr( get_option('jbfj_event_message') );
+	echo '<textarea rows="5" cols="50" name="jbfj_event_message" id="jbfj_event_message">'. $message .'</textarea>';
+}
 
 function jbfj_events_validate( $input ) {
 	$input['page_to_use'] = (int) $input['page_to_use'];
