@@ -5,7 +5,7 @@ By Bryce Flory
 
 Simple Events plugin.
 
-Version: 1.9.3
+Version: 1.9.4
 
 =============
 
@@ -29,6 +29,10 @@ Shortcode accepts one parameter to limit the number of events being displayed: `
 
 =============
 Change Log:
+
+1.9.4: February 21, 2015
+
+ - template path name fix
 
 1.9.3: February 12, 2015
 

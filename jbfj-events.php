@@ -2,7 +2,7 @@
 /* Plugin Name: JBFJ Events
  * Author: Bryce Flory
  * URI: www.bryceflory.com
- * Version: 1.9.3
+ * Version: 1.9.4
  */
 
 // Enqueue necessary scripts
@@ -387,11 +387,11 @@ function jbfj_event_template( $template ) {
 	
 	if ( is_page( $p2 ) && $p2 != 0 ) {
 	
-		$t = locate_template( array('jbfjevents.php'), true );
+		$t = locate_template( array('jbfj-events.php'), true );
 		
 		if ( !$t ) {
 			
-			$t = dirname(__FILE__). "/lib/templates/jbfjevents.php";
+			$t = dirname(__FILE__). "/lib/templates/jbfj-events.php";
 		
 			return $t;
 		}
